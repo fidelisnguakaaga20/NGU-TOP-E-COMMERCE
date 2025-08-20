@@ -12,18 +12,18 @@ const Footer = () => {
     <>
     <footer className='section__container footer__container'>
         <div className='footer__col'>
-            <h4>CONTACT INFO</h4>
+            <h4>CONTACT US</h4>
             <p>
                 <span><i className="ri-map-pin-2-fill"></i></span>
-                123, London Bridge Street, London.
+                N0.12, Aguiyi Ironsi Street, F.C.T, Abuja, Nigeria.
             </p>
             <p>
                 <span><i className="ri-mall-fill"></i></span> 
-                support@lebaba.com
+                support@ngutopproductsandservices.com
             </p>
             <p>
                 <span><i className="ri-phone-fill"></i></span>
-                (+012) 345689
+                (+234) 7031128081 
             </p>
         </div>
 
@@ -37,7 +37,7 @@ const Footer = () => {
         </div>
 
          <div className='footer__col'>
-            <h4>USEFUL LINK</h4>
+            <h4>OTHER LINKS</h4>
             <a href="/">Help</a>
             <a href="/">Track Your Order</a>
             <a href="/">Men</a>
@@ -58,7 +58,7 @@ const Footer = () => {
     </footer>
 
     <div className='footer__bar'>
-        Copyright @ 2025 by Lebaba. All rights Reserved.
+        Copyright @ 2025 by NGU-TOP Comp.NIG.LTD. All rights Reserved.
 
     </div>
 
