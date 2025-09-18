@@ -9,7 +9,7 @@ const Banner = () => {
         <div className='header__content z-30'>
             <h4 className='uppercase'>UP to 20% Discount on</h4>
             <h1>Girl's Fashion</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim, repellendus? Numquam repudiandae nobis, omnis harum dolores ?</p>
+            <p>Fresh styles for every season—new arrivals, everyday prices</p>
             <button className='btn'><Link to='/shop'>EXPLORE NOW</Link></button>
         </div>
         <div className='header__image'>

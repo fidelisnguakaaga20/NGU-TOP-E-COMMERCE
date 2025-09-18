@@ -1,85 +1,133 @@
-import React from 'react'
-import OrderSummary from './productDetails/OrderSummary'
-import { useDispatch } from 'react-redux'
-import { removeFromCart, updateQuantity } from '../../redux/features/Cart/CartSlice';
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectCartItems,
+  selectCartSubtotal,
+  updateQuantity,
+  removeFromCart,
+  clearCart,
+} from "../../redux/features/Cart/CartSlice.jsx";
+import { money } from "../../utils/currency";
 
-    const CartModal = ({products, isOpen, onClose}) => {
-      const dispatch = useDispatch();
+// Parse env tax/shipping
+const parseTaxRate = () => {
+  const raw = import.meta.env.VITE_TAX_RATE ?? 0.075; // default 7.5%
+  let rate = Number(raw);
+  if (Number.isNaN(rate)) rate = 0.075;
+  if (rate > 1) rate = rate / 100; // allow "7.5" to mean 7.5%
+  return Math.max(0, rate);
+};
+const TAX_RATE = parseTaxRate();
+const SHIPPING_FLAT = Number(import.meta.env.VITE_SHIPPING_FLAT ?? 0);
 
-      const handleQuantity = (type, id) => {
-        const payload = {type, id}
-        dispatch(updateQuantity(payload))
-      }
+const CartModal = ({ isOpen, onClose }) => {
+  const dispatch = useDispatch();
+  const items = useSelector(selectCartItems);
+  const subtotal = useSelector(selectCartSubtotal);
 
-      const handleRemove = (e, id) => {
-        e.preventDefault()
-        dispatch(removeFromCart({id}))
-      }
-      return (
-        <div className={`fixed z-[1000] inset-0 bg-black bg-opacity-80 transition-opacity ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-        style={{transition: 'opacity 300ms'}}
-        >
-          <div className={`fixed right-0 top-0 md:w-1/3 w-full bg-white h-full overflow-y-auto transition-transform}${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
-          style={{transition: 'transform 300ms cubic-bezier(0.25, 0.46, 0.94'}}
-          >
-            <div className='p-4 mt-4'>
-              <div className='flex justify-between items-center mb-4'>
-              <h4>Your Cart</h4>
-              <button 
-                  onClick={() => onClose()}
-                  className='text-gray-600 hover:text-gray-900'>
-                  <i className="ri-xrp-fill bg-black p-1 text-white"></i>
-              </button>
+  const itemCount = items.reduce((t, i) => t + i.quantity, 0);
+  const tax = +(subtotal * TAX_RATE).toFixed(2);
+  const total = +(subtotal + SHIPPING_FLAT + tax).toFixed(2);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50">
+      {/* backdrop */}
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} aria-hidden="true" />
+
+      {/* panel */}
+      <aside className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl overflow-y-auto">
+        <div className="p-6 border-b flex items-center justify-between">
+          <h2 className="text-2xl font-bold">
+            Your Cart <span className="opacity-60">({itemCount})</span>
+          </h2>
+          <button onClick={onClose} aria-label="Close" className="text-2xl">×</button>
+        </div>
+
+        {/* items */}
+        <div className="divide-y">
+          {items.length === 0 ? (
+            <p className="p-6 text-gray-500">Your cart is empty.</p>
+          ) : (
+            items.map((item) => (
+              <div key={item.id} className="p-6 flex gap-4 items-center">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-16 h-16 object-cover rounded"
+                />
+                <div className="flex-1">
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-gray-500">{money(item.price)} each</p>
+
+                  <div className="mt-2 flex items-center gap-3">
+                    <button
+                      className="px-2 py-1 border rounded"
+                      onClick={() => dispatch(updateQuantity({ id: item.id, delta: -1 }))}
+                    >
+                      –
+                    </button>
+                    <span className="w-6 text-center">{item.quantity}</span>
+                    <button
+                      className="px-2 py-1 border rounded"
+                      onClick={() => dispatch(updateQuantity({ id: item.id, delta: +1 }))}
+                    >
+                      +
+                    </button>
+
+                    <button
+                      className="ml-4 text-red-600 hover:underline"
+                      onClick={() => dispatch(removeFromCart(item.id))}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+
+                <div className="font-medium">
+                  {money(item.price * item.quantity)}
+                </div>
               </div>
-              
-              {/* cart details */}
-              <div className='cart-items'>
-                {
-                  products.length === 0 ? (<div>Your cart is empty</div>) : (
-                    products.map((item, index) => (
-                      <div key={index} className='flex flex-col md:flex-row md:items-center md:justify-between shadow-md md:p-5 p-2 mb-4'>
-                        <div className='flex items-center'>
-                          <span className='mr-4 px-1 bg-primary text-white rounded-full'>0{index + 1}</span>
-                          <img src={item.image} alt="" className='size-12 object-cover mr-4'/>
-                          <div>
-                            <h5 className='text-lg font-medium'>{item.name}</h5>
-                            <p className='text-gray-600 text-sm'>${Number(item.price).toFixed(2)}</p>        
-                          </div>
-                          <div className='flex flex-row md:justify-start justify-end items-center mt-2'>
-                            <button
-                            onClick={() => handleQuantity('decrement', item._id)}
-                            className='size-6 flex items-center justify-center px-1.5 rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white ml-8'
-                            >-</button>
-                            <span className='px-2 text-center mx-1'>{item.quantity}</span>
-                            <button
-                            onClick={() => handleQuantity('increment', item._id)}
-                            className='size-6 flex items-center justify-center px-1.5 rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white'
-                            >+</button>
-                            <div className='ml-5'>
-                              <button 
-                              onClick={(e) => handleRemove(e, item._id)}
-                              className='text-red-500 hover:text-red-800 mr-4'
-                              >Remove</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )
-                }
-              </div>
+            ))
+          )}
+        </div>
 
-                {/* calculation */}
-                {
-                  products.length > 0 && (
-                    <OrderSummary/>
-                  )
-                }
+        {/* summary */}
+        <div className="p-6 border-t space-y-3">
+          <div className="flex justify-between">
+            <span className="text-gray-600">Subtotal</span>
+            <span className="font-semibold">{money(subtotal)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Shipping</span>
+            <span>{money(SHIPPING_FLAT)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Tax ({(TAX_RATE * 100).toFixed(1)}%)</span>
+            <span>{money(tax)}</span>
+          </div>
+          <hr />
+          <div className="flex justify-between text-lg">
+            <span className="font-semibold">Total</span>
+            <span className="font-bold">{money(total)}</span>
+          </div>
 
-            </div>
+          <div className="flex items-center justify-between pt-4">
+            <button
+              className="text-sm text-gray-600 hover:underline"
+              onClick={() => dispatch(clearCart())}
+            >
+              Clear cart
+            </button>
+            <button className="bg-black text-white px-5 py-2 rounded">
+              Checkout
+            </button>
           </div>
         </div>
-      )
-    }
+      </aside>
+    </div>
+  );
+};
 
-export default CartModal
+export default CartModal;

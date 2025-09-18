@@ -1,8 +1,4 @@
 import React from 'react';
-// import category1 from "../../assets/category-1.jpg"
-// import category2 from "../../assets/category-2.jpg"
-// import category3 from "../../assets/category-3.jpg"
-// import category4 from "../../assets/category-4.jpg"
 import category1 from "../assets/category-1.jpg";
 import category2 from "../assets/category-2.jpg";
 import category3 from "../assets/category-3.jpg";
@@ -19,7 +15,7 @@ const Categories = () => {
      
         {name: 'Jewellery', path: 'jewellery', image: category3},
      
-        {name: 'Cosmetics', path: 'comestics', image: category4},
+        {name: 'Cosmetics', path: 'cosmestics', image: category4},
     ]
   return (
     <>

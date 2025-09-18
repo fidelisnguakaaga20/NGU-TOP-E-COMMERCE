@@ -32,9 +32,6 @@ router.post("/create-product", async(req, res) => {
 // get all products
 router.get("/", async (req, res) => {
     try {
-        // const {category, color, minPrice, page=1, limit = 10} = req.query;
-
-        // AFTER (add maxPrice)
         const { category, color, minPrice, maxPrice, page = 1, limit = 10 } = req.query;
 
 

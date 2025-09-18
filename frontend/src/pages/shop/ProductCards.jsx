@@ -1,50 +1,37 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import RatingStars from '../../components/RatingStars'
-import { useDispatch } from 'react-redux'
-import { addToCart } from '../../redux/features/Cart/CartSlice'
+import React from "react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/features/Cart/CartSlice";
+import { money } from "../../utils/currency";
 
-const ProductCards = ({products}) => {
-    const dispatch = useDispatch();
+const ProductCards = ({ products = [] }) => {
+  const dispatch = useDispatch();
 
-    const handleAddToCart = (product) => {
-        dispatch(addToCart(product))
-    }
+  const handleAdd = (product) => {
+    // send the full product; CartSlice will normalize id/price/image
+    dispatch(addToCart(product));
+  };
+
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
-        {
-            products.map((product, index) => (
-                <div key={index} className='product__card'>
-                    <div className='relative'>
-                        <Link to={`/shop/${product._id}`}>
-                        <img src={product.image} alt="product image" className='max-h-96 md:h-64 w-full object-cover hover:scale-105 transition-all duration-300' />
-                        </Link>
-
-                        <div className='hover:block absolute top-3 right-3'>                     
-                            <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleAddToCart(product)
-                            }}
-                            >
-                            <i className="ri-shopping-cart-2-line bg-primary p-1.5 text-white hover:bg-primary-dark"></i>
-                        </button>
-                        </div>
-  
-                    </div>
-                    
-                    {/* product description */}
-                    <div className='product__card__content'>
-                        <h4>{product.name}</h4>
-                        <p>${product.price} {product?.oldPrice ? <s>${product?.oldPrice}</s> : null}</p>
-                        <RatingStars rating={product.rating}/>
-                    </div>
-                </div>
-            ))
-        }
-
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {products.map((p) => (
+        <div key={p._id ?? p.id} className="rounded-lg border p-4 bg-white">
+          <img
+            src={p.image ?? p.images?.[0]}
+            alt={p.name}
+            className="h-40 w-full object-cover rounded"
+          />
+          <div className="mt-3 font-medium">{p.name}</div>
+          <div className="text-sm opacity-70">{money(p.price)}</div>
+          <button
+            onClick={() => handleAdd(p)}
+            className="mt-3 px-4 py-2 rounded bg-rose-500 text-white hover:bg-rose-600"
+          >
+            Add to Cart
+          </button>
+        </div>
+      ))}
     </div>
-  )
-}
+  );
+};
 
-export default ProductCards
+export default ProductCards;

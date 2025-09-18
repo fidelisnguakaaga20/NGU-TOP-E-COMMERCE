@@ -19,7 +19,7 @@ const Search = () => {
     <>
     <section className='section__container bg-primary-light'>
         <h2 className='section__header capitalize'>Search Products</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem.</p>
+        <p>Explore products curated for this category.</p>
     </section>
 
     <section>

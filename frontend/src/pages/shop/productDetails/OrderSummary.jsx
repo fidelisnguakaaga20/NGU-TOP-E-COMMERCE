@@ -1,37 +1,43 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { clearCart } from '../../../redux/features/Cart/CartSlice';
+import React from "react";
+import { useSelector } from "react-redux";
+
+const money = (n) => `$${Number(n || 0).toFixed(2)}`;
 
 const OrderSummary = () => {
-    const dispatch = useDispatch()
-    const products = useSelector((store) => store.cart.products);
-    const {selectedItems, totalPrice, tax, taxRate, grandTotal} = useSelector((store) => store.cart);
+  const items = useSelector((s) => s.cart?.items) || [];
 
-    const handleClearCart = () => {
-      dispatch(clearCart())
-    }
+  const subtotal = items.reduce(
+    (sum, i) => sum + (Number(i.price) || 0) * (Number(i.qty) || 0),
+    0
+  );
+
+  // tweak these rules as you like
+  const shipping = items.length ? 0 : 0;
+  const taxRate = 0; // e.g. 0.075 for 7.5%
+  const tax = subtotal * taxRate;
+
+  const total = subtotal + shipping + tax;
 
   return (
-    <div className='bg-primary-light mt-5 rounded text-base'>
-        <div className='px-6 py-4 space-y-5'>
-            <h2 className='text-xl text-text-dark'>Order Summary</h2>
-            <p className='text-text-dark mt-2'>SelectedItems: {selectedItems}</p>
-            <p>Total Price: ${totalPrice.toFixed(2)}</p>
-            <p>Tax ({taxRate * 100}%): ${tax.toFixed(2)}</p>
-            <h3 className='font-bold'>GrandTotal: ${grandTotal.toFixed(2)}</h3>
-            <div className='px-4 mb-6'>
-                <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleClearCart();
-                }} 
-                className='bg-red-500 px-3 py-1.5 text-white mt-2 rounded-md flex justify-between items-center mb-4'><span className='mr-2'>Clear cart</span> <i className="ri-delete-bin-7-line"></i></button>
-                
-                <button className='bg-green-600 px-3 py-1.5 text-white mt-2 rounded-md flex justify-between items-center'><span className='mr-2'>Proceed Checkout</span><i className="ri-bank-card-line"></i></button>
-            </div>
-        </div>
+    <div className="space-y-3">
+      <div className="flex justify-between">
+        <span>Subtotal</span>
+        <span>{money(subtotal)}</span>
+      </div>
+      <div className="flex justify-between">
+        <span>Shipping</span>
+        <span>{money(shipping)}</span>
+      </div>
+      <div className="flex justify-between">
+        <span>Tax</span>
+        <span>{money(tax)}</span>
+      </div>
+      <div className="border-t pt-2 flex justify-between font-semibold">
+        <span>Total</span>
+        <span>{money(total)}</span>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default OrderSummary
+export default OrderSummary;

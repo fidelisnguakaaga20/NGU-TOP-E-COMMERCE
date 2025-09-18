@@ -6,17 +6,17 @@ const PromoBanner = () => {
         <div className='banner__card'>
             <span><i className="ri-truck-line"></i></span>
             <h4>Free Delivery</h4>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi.</p>
+            <p>Fast, free delivery on eligible orders.</p>
         </div>
         <div className='banner__card'>
             <span><i className="ri-money-dollar-circle-line"></i></span>
             <h4>100% Money Back Guranteed</h4>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi.</p>
+            <p>Changed your mind? Return unworn items within 14 days for a full refund.</p>
         </div>
         <div className='banner__card'>
             <span><i className="ri-user-voice-fill"></i></span>
             <h4>Strong Support</h4>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi.</p>
+            <p>Need help? Email us @ support@ngutopproductsandservices.com.</p>
         </div>
     </section>
   )

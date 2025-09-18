@@ -13,7 +13,7 @@ const TrendingProducts = () => {
     <section className='section__container product__container'>
         <h2 className='section__header'>Trending Products</h2>
         <p className='section__subheader mb-12'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Hand-picked bestsellers customers are loving right now
         </p>
 
         {/* products card */}

@@ -23,7 +23,7 @@ const CategoryPage = () => {
     <>
     <section className='section__container bg-primary-light'>
         <h2 className='section__header capitalize'>{categoryName}</h2>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatem.</p>
+        <p>Makeup, skincare, and beauty tools—curated for every glow.</p>
     </section>
 
     {/* products card */}

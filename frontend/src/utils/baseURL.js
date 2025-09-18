@@ -1,9 +1,9 @@
-// export const getBaseURL = () => {
-//     return "http://localhost:5000"
-// }
-
 export const getBaseUrl = () => {
-  const url = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
-
-  return url.replace(/\/+$/, '');
+  const raw =
+    (import.meta && import.meta.env && import.meta.env.VITE_BACKEND_BASEURL) ||
+    "http://localhost:5000";
+  return raw.replace(/\/+$/, "");
 };
+
+const BASE_URL = getBaseUrl();
+export default BASE_URL;
